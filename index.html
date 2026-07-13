@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shrey Patel — Software &amp; Data Engineer</title>
+<meta name="description" content="Shrey Patel is a full-stack developer and data engineer building AI-powered SaaS apps, ETL pipelines, and production REST APIs. MS Computer Science, Roosevelt University.">
+<meta property="og:title" content="Shrey Patel — Software &amp; Data Engineer">
+<meta property="og:description" content="Full-stack developer and data engineer building AI-powered SaaS apps, ETL pipelines, and production REST APIs.">
+<meta property="og:image" content="/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0d12;
+    --panel: #11151d;
+    --panel-hi: #161c26;
+    --line: #232a37;
+    --text: #e7eaf0;
+    --muted: #8993a6;
+    --cyan: #5eead4;
+    --amber: #f5a524;
+    --cyan-dim: rgba(94,234,212,0.12);
+    --amber-dim: rgba(245,165,36,0.12);
+    --radius: 10px;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--cyan); color:#06110f; }
+
+  h1,h2,h3,h4{ font-family:'Space Grotesk', sans-serif; font-weight:600; letter-spacing:-0.01em; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  a{ color:inherit; text-decoration:none; }
+
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 32px; }
+
+  /* ---------- Background grid + noise ---------- */
+  .bg-grid{
+    position:fixed; inset:0; z-index:-2;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  }
+
+  /* ---------- Nav ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    backdrop-filter: blur(10px);
+    background: rgba(10,13,18,0.7);
+    border-bottom:1px solid var(--line);
+  }
+  nav.wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:64px;
+  }
+  .logo{ font-family:'JetBrains Mono', monospace; font-size:15px; color:var(--cyan); font-weight:600; }
+  .logo span{ color:var(--muted); }
+  .nav-links{ display:flex; gap:32px; list-style:none; }
+  .nav-links a{
+    font-size:14px; color:var(--muted); position:relative; padding:4px 0;
+    transition:color .25s ease;
+  }
+  .nav-links a::after{
+    content:''; position:absolute; left:0; bottom:0; width:0; height:1px;
+    background:var(--cyan); transition:width .25s ease;
+  }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-links a:hover::after{ width:100%; }
+  .nav-toggle{ display:none; background:none; border:none; color:var(--text); font-size:22px; cursor:pointer; }
+
+  /* ---------- Pipeline spine ---------- */
+  .spine{
+    position:absolute; left:50%; top:0; width:2px; height:100%;
+    transform:translateX(-50%);
+    background: linear-gradient(to bottom, transparent 0%, var(--line) 4%, var(--line) 96%, transparent 100%);
+    z-index:-1;
+  }
+  .spine-pulse{
+    position:absolute; left:50%; top:0; width:6px; height:6px; border-radius:50%;
+    transform:translateX(-50%);
+    background:var(--cyan);
+    box-shadow:0 0 12px 3px var(--cyan);
+    animation: pulse-travel 6s linear infinite;
+  }
+  @keyframes pulse-travel{
+    0%{ top:8%; opacity:0; }
+    5%{ opacity:1; }
+    95%{ opacity:1; }
+    100%{ top:98%; opacity:0; }
+  }
+
+  section{ position:relative; padding:120px 0 40px; }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace; font-size:12.5px; color:var(--amber);
+    letter-spacing:0.08em; text-transform:uppercase; margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:'//'; color:var(--muted); }
+  .section-title{ font-size:clamp(28px,4vw,38px); margin-bottom:48px; }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+    padding-top:64px;
+  }
+  .hero-kicker{
+    font-family:'JetBrains Mono', monospace; color:var(--cyan); font-size:14px;
+    display:flex; align-items:center; gap:10px; margin-bottom:24px;
+  }
+  .hero-kicker .dot{ width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px 2px var(--cyan); animation: blink 2s ease-in-out infinite; }
+  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+  .hero h1{
+    font-size:clamp(40px, 7vw, 74px); line-height:1.04; margin-bottom:20px;
+  }
+  .hero h1 .accent{ color:var(--cyan); }
+  .hero .role{
+    font-size:clamp(17px, 2.2vw, 22px); color:var(--muted); max-width:640px; margin-bottom:36px;
+    font-family:'JetBrains Mono', monospace;
+  }
+  .hero .role .cursor{ display:inline-block; width:9px; height:1.1em; background:var(--amber); vertical-align:text-bottom; animation: blink 1s steps(2) infinite; margin-left:2px; }
+
+  .hero-cta{ display:flex; gap:16px; flex-wrap:wrap; margin-bottom:56px; }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 24px; border-radius:8px; font-size:14.5px; font-weight:500;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    border:1px solid var(--line);
+  }
+  .btn-primary{ background:var(--cyan); color:#06110f; border-color:var(--cyan); }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 8px 24px -8px rgba(94,234,212,0.5); }
+  .btn-ghost{ color:var(--text); background:transparent; }
+  .btn-ghost:hover{ border-color:var(--cyan); color:var(--cyan); transform:translateY(-2px); }
+
+  .hero-stats{ display:flex; gap:0; flex-wrap:wrap; border-top:1px solid var(--line); padding-top:28px; }
+  .stat{ flex:1; min-width:130px; padding-right:24px; }
+  .stat .num{ font-family:'Space Grotesk',sans-serif; font-size:28px; color:var(--text); font-weight:700; }
+  .stat .lbl{ font-size:12.5px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-top:4px; }
+
+  /* ---------- reveal on scroll ---------- */
+  .reveal{ opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- About ---------- */
+  .about-grid{ display:grid; grid-template-columns:1.3fr 1fr; gap:56px; align-items:start; }
+  .about-text p{ color:var(--muted); margin-bottom:16px; font-size:15.5px; }
+  .about-text strong{ color:var(--text); font-weight:600; }
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:24px;
+  }
+  .fact-list{ display:flex; flex-direction:column; gap:16px; }
+  .fact{ display:flex; justify-content:space-between; font-size:13.5px; border-bottom:1px dashed var(--line); padding-bottom:14px; }
+  .fact:last-child{ border-bottom:none; padding-bottom:0; }
+  .fact .k{ color:var(--muted); font-family:'JetBrains Mono',monospace; }
+  .fact .v{ color:var(--text); text-align:right; max-width:60%; }
+
+  /* ---------- Experience timeline ---------- */
+  .timeline{ display:flex; flex-direction:column; gap:0; }
+  .tl-item{ display:grid; grid-template-columns:140px 28px 1fr; gap:0; }
+  .tl-date{ font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--amber); padding-top:4px; }
+  .tl-rail{ display:flex; flex-direction:column; align-items:center; }
+  .tl-node{ width:12px; height:12px; border-radius:50%; background:var(--bg); border:2px solid var(--cyan); margin-top:6px; flex-shrink:0; }
+  .tl-line{ width:1px; flex:1; background:var(--line); margin-top:4px; }
+  .tl-item:last-child .tl-line{ display:none; }
+  .tl-content{ padding-bottom:48px; }
+  .tl-content h3{ font-size:19px; margin-bottom:2px; }
+  .tl-content .co{ color:var(--cyan); font-size:13.5px; font-family:'JetBrains Mono',monospace; margin-bottom:14px; display:block; }
+  .tl-content ul{ list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .tl-content li{ color:var(--muted); font-size:14.5px; padding-left:18px; position:relative; }
+  .tl-content li::before{ content:'▸'; position:absolute; left:0; color:var(--amber); }
+
+  /* ---------- Projects ---------- */
+  .proj-grid{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  @media (max-width:800px){ .proj-grid{ grid-template-columns:1fr; } }
+  .proj-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:28px; display:flex; flex-direction:column; transition: border-color .25s ease, transform .25s ease;
+  }
+  .proj-card:hover{ border-color:var(--cyan); transform:translateY(-4px); }
+  .proj-top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
+  .proj-card h3{ font-size:20px; }
+  .proj-tag{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--amber); border:1px solid var(--amber-dim); background:var(--amber-dim); padding:3px 8px; border-radius:5px; white-space:nowrap; }
+  .proj-date{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:14px; display:block; }
+  .proj-card ul{ list-style:none; display:flex; flex-direction:column; gap:9px; margin-bottom:18px; flex:1; }
+  .proj-card li{ color:var(--muted); font-size:14px; padding-left:16px; position:relative; }
+  .proj-card li::before{ content:'—'; position:absolute; left:0; color:var(--cyan); }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--cyan); background:var(--cyan-dim); border:1px solid rgba(94,234,212,0.25); padding:4px 9px; border-radius:5px; }
+
+  /* ---------- Skills ---------- */
+  .skills-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  @media (max-width:800px){ .skills-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:520px){ .skills-grid{ grid-template-columns:1fr; } }
+  .skill-cat{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:20px; }
+  .skill-cat h4{ font-size:13px; font-family:'JetBrains Mono',monospace; color:var(--amber); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:14px; }
+  .skill-tags{ display:flex; flex-wrap:wrap; gap:7px; }
+  .skill-tags span{
+    font-size:12.5px; color:var(--text); background:var(--panel-hi); border:1px solid var(--line);
+    padding:5px 10px; border-radius:6px; max-width:100%; word-break:break-word;
+    transition:border-color .2s ease, color .2s ease, transform .2s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .skill-tags span:hover{
+    border-color:var(--cyan); color:var(--cyan); background:var(--cyan-dim);
+    transform:translateY(-2px); box-shadow:0 4px 14px -6px rgba(94,234,212,0.45);
+  }
+
+  /* ---------- Contact ---------- */
+  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:48px; }
+  @media (max-width:800px){ .contact-grid{ grid-template-columns:1fr; } }
+  .contact-links{ display:flex; flex-direction:column; gap:14px; margin-top:24px; }
+  .contact-link{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 18px; background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    font-size:14.5px; transition:border-color .2s ease, transform .2s ease, background .2s ease;
+  }
+  .contact-link:hover{ border-color:var(--cyan); transform:translateX(4px); background:var(--panel-hi); }
+  .contact-link .arrow{ color:var(--muted); }
+  .contact-link:hover .arrow{ color:var(--cyan); }
+  .contact-link .icon{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:34px; height:34px; border-radius:7px; background:var(--cyan-dim);
+    color:var(--cyan); flex-shrink:0; font-family:'JetBrains Mono',monospace; font-size:14px;
+  }
+  .contact-link .label-group{ display:flex; align-items:center; gap:14px; }
+  .contact-link .label-text{ display:flex; flex-direction:column; }
+  .contact-link .label-text .kind{ font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:2px; }
+
+  form{ display:flex; flex-direction:column; gap:16px; }
+  label{ font-size:12.5px; font-family:'JetBrains Mono',monospace; color:var(--muted); margin-bottom:6px; display:block; }
+  input, textarea{
+    width:100%; background:var(--panel); border:1px solid var(--line); border-radius:7px;
+    padding:12px 14px; color:var(--text); font-family:'Inter',sans-serif; font-size:14.5px;
+    transition:border-color .2s ease;
+  }
+  input:focus, textarea:focus{ outline:none; border-color:var(--cyan); }
+  textarea{ resize:vertical; min-height:110px; }
+  .form-status{ font-size:13px; color:var(--cyan); font-family:'JetBrains Mono',monospace; min-height:18px; }
+
+  footer{
+    border-top:1px solid var(--line); padding:32px 0; margin-top:60px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+  }
+  footer .mono{ color:var(--muted); font-size:12.5px; }
+
+  @media (max-width:700px){
+    .nav-links{
+      position:fixed; top:64px; right:0; left:0; background:var(--bg); border-bottom:1px solid var(--line);
+      flex-direction:column; padding:20px 32px; gap:18px;
+      transform:translateY(-120%); transition:transform .3s ease; z-index:99;
+    }
+    .nav-links.open{ transform:translateY(0); }
+    .nav-toggle{ display:block; }
+    .about-grid{ grid-template-columns:1fr; }
+    .tl-item{ grid-template-columns:90px 22px 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<header>
+  <nav class="wrap">
+    <a href="#top" class="logo">shrey<span>.patel</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+  </nav>
+</header>
+
+<div class="spine"><div class="spine-pulse"></div></div>
+
+<main>
+  <section class="hero" id="top">
+    <div class="wrap">
+      <div class="hero-kicker"><span class="dot"></span> AVAILABLE FOR NEW OPPORTUNITIES</div>
+      <h1>Shrey Patel<br><span class="accent">builds pipelines —</span><br>for data, and for apps.</h1>
+      <div class="role">$ full-stack development · data engineering · AI integration<span class="cursor"></span></div>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#projects">View Projects</a>
+        <a class="btn btn-ghost" href="#contact">Get In Touch</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="num">2</div><div class="lbl">DATA/SECURITY INTERNSHIPS</div></div>
+        <div class="stat"><div class="num">20+</div><div class="lbl">API ENDPOINTS SECURED</div></div>
+        <div class="stat"><div class="num">80%</div><div class="lbl">DEPLOY SETUP TIME CUT</div></div>
+        <div class="stat"><div class="num">MS</div><div class="lbl">COMPUTER SCIENCE, 2026</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="eyebrow">About</div>
+      <h2 class="section-title reveal">From manufacturing data to production APIs</h2>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p>I'm a <strong>Master of Science in Computer Science</strong> candidate at Roosevelt University (graduating May 2026), building on a Bachelor's in Computer Engineering from Gujarat Technological University. My work sits at the intersection of <strong>full-stack development</strong>, <strong>data engineering</strong>, and <strong>applied AI</strong>.</p>
+          <p>I got my start automating security reviews and building ETL pipelines that manufacturing teams actually used — cutting hours of manual work into minutes and turning raw production data into dashboards people checked every day. That habit of turning messy processes into clean, reliable systems now shows up in how I build software: typed APIs, containerized deployments, and interfaces that get out of the user's way.</p>
+          <p>Most recently, I designed and shipped <strong>TrailPack</strong>, a full-stack SaaS app that pairs an AI recommendation engine with real-time weather data — deployed end-to-end on AWS with a one-command redeploy pipeline.</p>
+        </div>
+        <div class="card reveal">
+          <div class="fact-list">
+            <div class="fact"><span class="k">LOCATION</span><span class="v">Chicago, IL</span></div>
+            <div class="fact"><span class="k">EDUCATION</span><span class="v">M.S. Computer Science, Roosevelt University</span></div>
+            <div class="fact"><span class="k">FOCUS</span><span class="v">Full-Stack · Data Engineering · AI</span></div>
+            <div class="fact"><span class="k">GITHUB</span><span class="v">Shrey3008</span></div>
+            <div class="fact"><span class="k">STATUS</span><span class="v">Open to full-time roles</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="wrap">
+      <div class="eyebrow">Experience</div>
+      <h2 class="section-title reveal">Where the pipelines started</h2>
+      <div class="timeline">
+        <div class="tl-item reveal">
+          <div class="tl-date">Apr 2023 – Jul 2023</div>
+          <div class="tl-rail"><div class="tl-node"></div><div class="tl-line"></div></div>
+          <div class="tl-content">
+            <h3>Security &amp; Data Intern</h3>
+            <span class="co">Let's Secure Us · Ahmedabad, Gujarat (Hybrid)</span>
+            <ul>
+              <li>Initiated PHP scripting to automate security and operational processes, saving 10+ hours per week on user access reviews and vulnerability checks.</li>
+              <li>Built five KPI dashboards in Power BI tracking system uptime and error rates, accelerating vulnerability identification across 20+ API endpoints by 30%.</li>
+              <li>Automated daily security scans via Bash scripting, cutting scan execution time by 30%.</li>
+              <li>Used Git across 15+ commits to support team collaboration on shared automation projects.</li>
+              <li>Refactored and unit-tested data security measures for 20+ endpoints, preventing unauthorized access.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-date">Jan 2023 – Apr 2023</div>
+          <div class="tl-rail"><div class="tl-node"></div></div>
+          <div class="tl-content">
+            <h3>Data Engineering Intern</h3>
+            <span class="co">Tech. ELECON · Anand, Gujarat</span>
+            <ul>
+              <li>Engineered end-to-end ETL pipelines with Apache Airflow, eliminating 10+ hours of manual data processing per week.</li>
+              <li>Delivered 5 interactive Tableau dashboards visualizing throughput, downtime, and defect rates for 3 departments.</li>
+              <li>Tuned MySQL queries and relational schemas, boosting critical report performance by 25%.</li>
+              <li>Traced and resolved the top three causes of cross-functional data inconsistency, improving reliability by 20%.</li>
+              <li>Integrated sensor data with ERP records into a unified operational view, establishing a reusable pipeline pattern.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="eyebrow">Projects</div>
+      <h2 class="section-title reveal">Things I've shipped end-to-end</h2>
+      <div class="proj-grid">
+        <div class="proj-card reveal">
+          <div class="proj-top">
+            <h3>TrailPack</h3>
+            <span class="proj-tag">SaaS</span>
+          </div>
+          <span class="proj-date">Mar 2026 – May 2026 · AI-Powered Camping Trip Planner</span>
+          <ul>
+            <li>Full-stack SaaS app with JWT authentication and role-based access control, reducing unauthorized access incidents by 30%.</li>
+            <li>Integrated Groq AI for gear recommendations, OpenWeatherMap for live weather, and AWS SES for notifications across 3 production REST APIs.</li>
+            <li>Containerized with Docker, cutting manual environment setup by 80%.</li>
+            <li>Deployed on AWS (Elastic Beanstalk, CloudFront, S3, IAM) over HTTPS with one-command redeploy scripts.</li>
+            <li>Combined AI checklists with real-time weather/terrain data to cut trip-planning time from ~1 hour to under 5 minutes.</li>
+          </ul>
+          <div class="chip-row">
+            <span class="chip">JWT</span><span class="chip">Groq AI</span><span class="chip">AWS</span><span class="chip">Docker</span><span class="chip">Node.js</span>
+          </div>
+        </div>
+        <div class="proj-card reveal">
+          <div class="proj-top">
+            <h3>Data Integration &amp; Visualization Pipeline</h3>
+            <span class="proj-tag">ETL</span>
+          </div>
+          <span class="proj-date">Jan 2023 – Apr 2023 · Analytics Infrastructure</span>
+          <ul>
+            <li>Designed an end-to-end ETL pipeline in Apache Airflow for extraction, cleaning, and loading of production datasets.</li>
+            <li>Documented the pipeline for reuse and long-term maintainability across teams.</li>
+            <li>Built Tableau dashboards for near real-time performance tracking and operational adjustments.</li>
+            <li>Optimized SQL queries and storage schemas to speed up interactive analysis.</li>
+          </ul>
+          <div class="chip-row">
+            <span class="chip">Apache Airflow</span><span class="chip">MySQL</span><span class="chip">Tableau</span><span class="chip">ETL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <div class="eyebrow">Technical Skills</div>
+      <h2 class="section-title reveal">The stack</h2>
+      <div class="skills-grid">
+        <div class="skill-cat reveal">
+          <h4>Languages</h4>
+          <div class="skill-tags">
+            <span>Python</span><span>Java</span><span>C++</span><span>JavaScript</span><span>TypeScript</span><span>SQL</span><span>Node.js</span><span>Bash</span><span>PowerShell</span>
+          </div>
+        </div>
+        <div class="skill-cat reveal">
+          <h4>Data &amp; ML</h4>
+          <div class="skill-tags">
+            <span>Pandas</span><span>NumPy</span><span>Scikit-learn</span><span>Matplotlib</span><span>Apache Airflow</span><span>ETL Pipelines</span><span>Data Validation</span><span>Data Quality Checks</span>
+          </div>
+        </div>
+        <div class="skill-cat reveal">
+          <h4>Databases</h4>
+          <div class="skill-tags">
+            <span>MySQL</span><span>MongoDB</span><span>DynamoDB (NoSQL)</span><span>Elasticsearch</span><span>Time-Series Databases</span>
+          </div>
+        </div>
+        <div class="skill-cat reveal">
+          <h4>BI &amp; Visualization</h4>
+          <div class="skill-tags">
+            <span>Tableau</span><span>Power BI</span><span>Grafana</span><span>SSRS</span><span>Statistical Reporting</span>
+          </div>
+        </div>
+        <div class="skill-cat reveal">
+          <h4>Cloud &amp; DevOps</h4>
+          <div class="skill-tags">
+            <span>AWS (Elastic Beanstalk, S3, CloudFront, DynamoDB, SES, IAM)</span><span>Microsoft Azure</span><span>Azure DevOps</span><span>Docker</span><span>Git</span><span>GitHub</span><span>CI/CD</span>
+          </div>
+        </div>
+        <div class="skill-cat reveal">
+          <h4>Web &amp; APIs</h4>
+          <div class="skill-tags">
+            <span>REST APIs</span><span>HTML</span><span>CSS</span><span>Express.js</span><span>JWT Authentication</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="eyebrow">Contact</div>
+      <h2 class="section-title reveal">Let's build something</h2>
+      <div class="contact-grid">
+        <div class="reveal">
+          <p style="color:var(--muted); font-size:15px; max-width:420px;">Open to full-time software, data engineering, and AI/full-stack roles. The fastest way to reach me is email — I'll usually reply within a day.</p>
+          <div class="contact-links">
+            <a class="contact-link" href="mailto:sppatel3008@gmail.com">
+              <span class="label-group">
+                <span class="icon">@</span>
+                <span class="label-text"><span class="kind">Email</span>sppatel3008@gmail.com</span>
+              </span>
+              <span class="arrow">→</span>
+            </a>
+            <a class="contact-link" href="https://www.linkedin.com/in/spatel30/" target="_blank" rel="noopener">
+              <span class="label-group">
+                <span class="icon">in</span>
+                <span class="label-text"><span class="kind">LinkedIn</span>linkedin.com/in/spatel30</span>
+              </span>
+              <span class="arrow">→</span>
+            </a>
+            <a class="contact-link" href="https://github.com/Shrey3008" target="_blank" rel="noopener">
+              <span class="label-group">
+                <span class="icon">&lt;/&gt;</span>
+                <span class="label-text"><span class="kind">GitHub</span>github.com/Shrey3008</span>
+              </span>
+              <span class="arrow">→</span>
+            </a>
+          </div>
+        </div>
+        <form id="contactForm" class="reveal">
+          <div>
+            <label for="name">NAME</label>
+            <input type="text" id="name" name="name" required placeholder="Your name">
+          </div>
+          <div>
+            <label for="email">EMAIL</label>
+            <input type="email" id="email" name="email" required placeholder="you@example.com">
+          </div>
+          <div>
+            <label for="message">MESSAGE</label>
+            <textarea id="message" name="message" required placeholder="What are you working on?"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="align-self:flex-start;">Send Message</button>
+          <div class="form-status" id="formStatus"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="wrap">
+    <span class="mono">© 2026 Shrey Patel</span>
+    <span class="mono">Built with HTML · CSS · JS</span>
+  </footer>
+</main>
+
+<script>
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Contact form (client-side only, no backend)
+  const form = document.getElementById('contactForm');
+  const status = document.getElementById('formStatus');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+    if (!name || !email || !message) {
+      status.textContent = 'Please fill in every field.';
+      return;
+    }
+    const subject = encodeURIComponent(`Portfolio contact from ${name}`);
+    const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
+    window.location.href = `mailto:sppatel3008@gmail.com?subject=${subject}&body=${body}`;
+    status.textContent = 'Opening your email client…';
+    form.reset();
+  });
+</script>
+
+</body>
+</html>
