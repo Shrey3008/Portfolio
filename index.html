@@ -197,6 +197,16 @@
   .proj-card li::before{ content:'—'; position:absolute; left:0; color:var(--cyan); }
   .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
   .chip{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--cyan); background:var(--cyan-dim); border:1px solid rgba(94,234,212,0.25); padding:4px 9px; border-radius:5px; }
+  .proj-links{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
+  .proj-links a{
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan);
+    background:var(--cyan-dim); border:1px solid rgba(94,234,212,0.25);
+    padding:5px 10px; border-radius:6px; transition:border-color .2s ease, transform .2s ease;
+  }
+  .proj-links a:hover{ border-color:var(--cyan); transform:translateY(-2px); }
+  .proj-shots{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .proj-shots img{ width:100%; height:auto; border-radius:8px; border:1px solid var(--line); display:block; }
+  @media (max-width:480px){ .proj-shots{ grid-template-columns:1fr; } }
 
   /* ---------- Skills ---------- */
   .skills-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
@@ -345,11 +355,10 @@
             <h3>Security &amp; Data Intern</h3>
             <span class="co">Let's Secure Us · Ahmedabad, Gujarat (Hybrid)</span>
             <ul>
-              <li>Initiated PHP scripting to automate security and operational processes, saving 10+ hours per week on user access reviews and vulnerability checks.</li>
-              <li>Built five KPI dashboards in Power BI tracking system uptime and error rates, accelerating vulnerability identification across 20+ API endpoints by 30%.</li>
-              <li>Automated daily security scans via Bash scripting, cutting scan execution time by 30%.</li>
-              <li>Used Git across 15+ commits to support team collaboration on shared automation projects.</li>
-              <li>Refactored and unit-tested data security measures for 20+ endpoints, preventing unauthorized access.</li>
+              <li>Wrote PHP and Bash scripts to automate routine security checks and daily scans, saving the team 10+ hours per week on user access reviews and cutting scan execution time by 30% across 20+ API endpoints.</li>
+              <li>Developed five KPI dashboards in Power BI to track system uptime and error rates, giving the team real-time visibility into vulnerabilities across 20+ API endpoints.</li>
+              <li>Strengthened data security for 20+ API endpoints by refactoring code and adding unit tests, improving data integrity and reducing unauthorized access risks.</li>
+              <li>Managed version control with Git across team automation projects, contributing 15+ commits and collaborating on shared scripting work.</li>
             </ul>
           </div>
         </div>
@@ -360,11 +369,10 @@
             <h3>Data Engineering Intern</h3>
             <span class="co">Tech. ELECON · Anand, Gujarat</span>
             <ul>
-              <li>Engineered end-to-end ETL pipelines with Apache Airflow, eliminating 10+ hours of manual data processing per week.</li>
-              <li>Delivered 5 interactive Tableau dashboards visualizing throughput, downtime, and defect rates for 3 departments.</li>
-              <li>Tuned MySQL queries and relational schemas, boosting critical report performance by 25%.</li>
-              <li>Traced and resolved the top three causes of cross-functional data inconsistency, improving reliability by 20%.</li>
-              <li>Integrated sensor data with ERP records into a unified operational view, establishing a reusable pipeline pattern.</li>
+              <li>Engineered Airflow ETL pipelines for manufacturing operations data, automating workflows and eliminating 10+ hours of manual processing per week.</li>
+              <li>Delivered 5 Tableau dashboards visualizing throughput, downtime, and defect rates, supporting decisions across 3 departments.</li>
+              <li>Optimized MySQL queries and schema design, improving critical report performance by 25%.</li>
+              <li>Investigated data inconsistencies in cross-functional reports, improving decision-making reliability by 20% through code refactoring.</li>
             </ul>
           </div>
         </div>
@@ -384,30 +392,37 @@
           </div>
           <span class="proj-date">Mar 2026 – May 2026 · AI-Powered Camping Trip Planner</span>
           <ul>
-            <li>Full-stack SaaS app with JWT authentication and role-based access control, reducing unauthorized access incidents by 30%.</li>
-            <li>Integrated Groq AI for gear recommendations, OpenWeatherMap for live weather, and AWS SES for notifications across 3 production REST APIs.</li>
-            <li>Containerized with Docker, cutting manual environment setup by 80%.</li>
-            <li>Deployed on AWS (Elastic Beanstalk, CloudFront, S3, IAM) over HTTPS with one-command redeploy scripts.</li>
-            <li>Combined AI checklists with real-time weather/terrain data to cut trip-planning time from ~1 hour to under 5 minutes.</li>
+            <li>Architected a full-stack SaaS trip planner with JWT authentication and role-based access control, reducing unauthorized access incidents by 30%.</li>
+            <li>Integrated Groq AI, OpenWeatherMap, and AWS SES APIs to power gear recommendations, weather planning, and email notifications, cutting manual trip planning time from ~1 hour to under 5 minutes.</li>
+            <li>Containerized and deployed the application using Docker and AWS (Elastic Beanstalk, CloudFront, S3, IAM) with HTTPS and one-command redeploy scripts, reducing manual setup by 80%.</li>
+            <li>Implemented saved-trip management, checklist tracking, and a responsive mobile UI using JavaScript and CSS.</li>
           </ul>
           <div class="chip-row">
-            <span class="chip">JWT</span><span class="chip">Groq AI</span><span class="chip">AWS</span><span class="chip">Docker</span><span class="chip">Node.js</span>
+            <span class="chip">JWT</span><span class="chip">Groq AI</span><span class="chip">OpenWeatherMap</span><span class="chip">AWS SES</span><span class="chip">Docker</span><span class="chip">AWS</span><span class="chip">JavaScript</span><span class="chip">CSS</span>
           </div>
         </div>
         <div class="proj-card reveal">
           <div class="proj-top">
-            <h3>Data Integration &amp; Visualization Pipeline</h3>
-            <span class="proj-tag">ETL</span>
+            <h3>TalkData</h3>
+            <span class="proj-tag">AI/SQL</span>
           </div>
-          <span class="proj-date">Jan 2023 – Apr 2023 · Analytics Infrastructure</span>
+          <span class="proj-date">AI SQL Analytics Tool</span>
+          <div class="proj-links">
+            <a href="https://github.com/Shrey3008/Talkdata" target="_blank" rel="noopener">GitHub →</a>
+            <a href="https://talkdata-sigma.vercel.app" target="_blank" rel="noopener">Live Demo →</a>
+          </div>
+          <div class="proj-shots">
+            <img src="assets/talkdata-workspace.png" alt="TalkData workspace view" loading="lazy">
+            <img src="assets/talkdata-dashboard.png" alt="TalkData pinned dashboard view" loading="lazy">
+          </div>
           <ul>
-            <li>Designed an end-to-end ETL pipeline in Apache Airflow for extraction, cleaning, and loading of production datasets.</li>
-            <li>Documented the pipeline for reuse and long-term maintainability across teams.</li>
-            <li>Built Tableau dashboards for near real-time performance tracking and operational adjustments.</li>
-            <li>Optimized SQL queries and storage schemas to speed up interactive analysis.</li>
+            <li>Built a full-stack natural language-to-SQL analytics platform that converts plain-English questions into SQL queries, auto-generates charts, and supports pinned dashboards for saved insights.</li>
+            <li>Designed a RAG-based schema retrieval pipeline enabling accurate SQL generation grounded in the actual database structure, reducing hallucinated queries.</li>
+            <li>Implemented a 3-layer security architecture to prevent SQL injection and unauthorized query execution, validated by a 55-test suite that specifically caught a CTE-shadowing bypass vulnerability.</li>
+            <li>Automated data pipeline orchestration using Apache Airflow and deployed a production-ready app with live frontend/backend hosting on Vercel.</li>
           </ul>
           <div class="chip-row">
-            <span class="chip">Apache Airflow</span><span class="chip">MySQL</span><span class="chip">Tableau</span><span class="chip">ETL</span>
+            <span class="chip">RAG</span><span class="chip">SQL</span><span class="chip">Apache Airflow</span><span class="chip">Vercel</span><span class="chip">Security</span>
           </div>
         </div>
       </div>
@@ -420,39 +435,57 @@
       <h2 class="section-title reveal">The stack</h2>
       <div class="skills-grid">
         <div class="skill-cat reveal">
-          <h4>Languages</h4>
+          <h4>Programming</h4>
           <div class="skill-tags">
-            <span>Python</span><span>Java</span><span>C++</span><span>JavaScript</span><span>TypeScript</span><span>SQL</span><span>Node.js</span><span>Bash</span><span>PowerShell</span>
+            <span>Python</span><span>Java</span><span>JavaScript</span><span>Node.js</span><span>Bash</span>
           </div>
         </div>
         <div class="skill-cat reveal">
           <h4>Data &amp; ML</h4>
           <div class="skill-tags">
-            <span>Pandas</span><span>NumPy</span><span>Scikit-learn</span><span>Matplotlib</span><span>Apache Airflow</span><span>ETL Pipelines</span><span>Data Validation</span><span>Data Quality Checks</span>
+            <span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>ETL Pipelines</span><span>Data Validation</span><span>Data Quality Checks</span>
           </div>
         </div>
         <div class="skill-cat reveal">
           <h4>Databases</h4>
           <div class="skill-tags">
-            <span>MySQL</span><span>MongoDB</span><span>DynamoDB (NoSQL)</span><span>Elasticsearch</span><span>Time-Series Databases</span>
+            <span>MySQL</span><span>SQL</span><span>DynamoDB (NoSQL)</span>
           </div>
         </div>
         <div class="skill-cat reveal">
           <h4>BI &amp; Visualization</h4>
           <div class="skill-tags">
-            <span>Tableau</span><span>Power BI</span><span>Grafana</span><span>SSRS</span><span>Statistical Reporting</span>
+            <span>Tableau</span><span>Power BI</span><span>Statistical Reporting</span>
+          </div>
+        </div>
+        <div class="skill-cat reveal">
+          <h4>ETL &amp; Workflow</h4>
+          <div class="skill-tags">
+            <span>Apache Airflow</span>
           </div>
         </div>
         <div class="skill-cat reveal">
           <h4>Cloud &amp; DevOps</h4>
           <div class="skill-tags">
-            <span>AWS (Elastic Beanstalk, S3, CloudFront, DynamoDB, SES, IAM)</span><span>Microsoft Azure</span><span>Azure DevOps</span><span>Docker</span><span>Git</span><span>GitHub</span><span>CI/CD</span>
+            <span>AWS (Elastic Beanstalk, S3, CloudFront, DynamoDB, SES, IAM)</span><span>Docker</span><span>Git</span><span>GitHub</span><span>CI/CD</span>
+          </div>
+        </div>
+        <div class="skill-cat reveal">
+          <h4>Security</h4>
+          <div class="skill-tags">
+            <span>Vulnerability Detection</span><span>API Security</span><span>Access Management</span>
           </div>
         </div>
         <div class="skill-cat reveal">
           <h4>Web &amp; APIs</h4>
           <div class="skill-tags">
-            <span>REST APIs</span><span>HTML</span><span>CSS</span><span>Express.js</span><span>JWT Authentication</span>
+            <span>REST APIs</span><span>HTML</span><span>CSS</span><span>Express.js</span><span>JWT Authentication</span><span>LLM Integration/RAG Pipelines</span>
+          </div>
+        </div>
+        <div class="skill-cat reveal">
+          <h4>Other</h4>
+          <div class="skill-tags">
+            <span>Excel (Advanced)</span><span>Agile/Scrum</span><span>Process Documentation</span>
           </div>
         </div>
       </div>
