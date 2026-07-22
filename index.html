@@ -154,6 +154,7 @@
   .reveal.in{ opacity:1; transform:translateY(0); }
   /* staggered entrance for grid/timeline children */
   .proj-grid .reveal:nth-child(2){ transition-delay:.09s; }
+  .proj-grid .reveal:nth-child(3){ transition-delay:.18s; }
   .skills-grid .reveal:nth-child(2){ transition-delay:.05s; }
   .skills-grid .reveal:nth-child(3){ transition-delay:.10s; }
   .skills-grid .reveal:nth-child(4){ transition-delay:.15s; }
@@ -414,6 +415,29 @@
       <div class="eyebrow">Projects</div>
       <h2 class="section-title reveal">Things I've shipped end-to-end</h2>
       <div class="proj-grid">
+        <div class="proj-card reveal">
+          <div class="proj-top">
+            <h3>HN Hiring Trends Dashboard</h3>
+            <span class="proj-tag">Data/LLM</span>
+          </div>
+          <span class="proj-date">Jul 2026 · LLM-Powered Data Pipeline &amp; Analytics</span>
+          <div class="proj-links">
+            <a href="https://github.com/Shrey3008/hn-hiring-dashboard" target="_blank" rel="noopener">GitHub →</a>
+            <a href="https://hn-hiring-dashboard-t65sz95fbuk5vjwzcatmtz.streamlit.app/" target="_blank" rel="noopener">Live Demo →</a>
+          </div>
+          <div class="proj-shots">
+            <img src="assets/hn-overview.png" alt="Dashboard KPI row and natural language query box" loading="lazy">
+            <img src="assets/hn-tech-trend.png" alt="Technology trend chart comparing share of job posts over time" loading="lazy">
+          </div>
+          <ul>
+            <li>Engineered an end-to-end ETL pipeline ingesting ~12,000 unstructured job posts via the Algolia HN API, parsed into a structured schema with 90%+ field accuracy on company and work-mode classification.</li>
+            <li>Built an interactive Streamlit dashboard visualizing hiring trends across 124 technologies, revealing an 11-point shift from remote to onsite roles over three years.</li>
+            <li>Integrated a Groq-powered natural language query feature with layered SQL guardrails, then caught and fixed a 3x data accuracy bug in LLM-generated SQL caused by join fan-out.</li>
+          </ul>
+          <div class="chip-row">
+            <span class="chip">Python</span><span class="chip">SQLAlchemy</span><span class="chip">SQLite</span><span class="chip">Streamlit</span><span class="chip">Groq API</span><span class="chip">Pandas</span><span class="chip">Altair</span>
+          </div>
+        </div>
         <div class="proj-card reveal">
           <div class="proj-top">
             <h3>TrailPack</h3>
