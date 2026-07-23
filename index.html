@@ -224,8 +224,28 @@
   }
   .proj-links a:hover{ border-color:var(--cyan); transform:translateY(-2px); }
   .proj-shots{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
-  .proj-shots img{ width:100%; height:auto; border-radius:8px; border:1px solid var(--line); display:block; }
+  .proj-shots img{ width:100%; height:auto; border-radius:8px; border:1px solid var(--line); display:block; cursor:zoom-in; transition:border-color .2s ease; }
+  .proj-shots img:hover{ border-color:var(--cyan); }
   @media (max-width:480px){ .proj-shots{ grid-template-columns:1fr; } }
+
+  /* ---------- Lightbox ---------- */
+  .lightbox{
+    position:fixed; inset:0; z-index:1000; display:none;
+    align-items:center; justify-content:center; padding:32px;
+    background:rgba(6,9,14,0.88); backdrop-filter:blur(6px); cursor:zoom-out;
+  }
+  .lightbox.open{ display:flex; }
+  .lightbox img{
+    max-width:92vw; max-height:90vh; width:auto; height:auto;
+    border-radius:10px; border:1px solid var(--line);
+    box-shadow:0 24px 70px -20px rgba(0,0,0,0.7); cursor:default;
+  }
+  .lightbox-close{
+    position:absolute; top:20px; right:26px; background:none; border:none;
+    color:var(--text); font-size:30px; line-height:1; cursor:pointer; opacity:.75;
+    transition:opacity .2s ease, color .2s ease;
+  }
+  .lightbox-close:hover{ opacity:1; color:var(--cyan); }
 
   /* ---------- Skills ---------- */
   .skills-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
@@ -608,6 +628,11 @@
   </footer>
 </main>
 
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged screenshot">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
 <script>
   // Mobile nav toggle
   const navToggle = document.getElementById('navToggle');
@@ -644,6 +669,35 @@
     window.location.href = `mailto:sppatel3008@gmail.com?subject=${subject}&body=${body}`;
     status.textContent = 'Opening your email client…';
     form.reset();
+  });
+
+  // Lightbox for project screenshots (event delegation → works for all current/future .proj-shots img)
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  function openLightbox(img) {
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt || '';
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    lightboxImg.src = '';
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('click', (e) => {
+    const img = e.target.closest('.proj-shots img');
+    if (img) openLightbox(img);
+  });
+  // Close when clicking the overlay background or the close button, but not the image itself
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox || e.target === lightboxClose) closeLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
   });
 </script>
 
