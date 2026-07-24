@@ -226,6 +226,7 @@
   .proj-shots{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
   .proj-shots img{ width:100%; height:auto; border-radius:8px; border:1px solid var(--line); display:block; cursor:zoom-in; transition:border-color .2s ease; }
   .proj-shots img:hover{ border-color:var(--cyan); }
+  .proj-shots.proj-hero{ grid-template-columns:1fr; }
   @media (max-width:480px){ .proj-shots{ grid-template-columns:1fr; } }
 
   /* ---------- Lightbox ---------- */
@@ -464,6 +465,18 @@
             <span class="proj-tag">SaaS</span>
           </div>
           <span class="proj-date">Mar 2026 – May 2026 · AI-Powered Camping Trip Planner</span>
+          <div class="proj-links">
+            <a href="https://d1lo74lzwr0k57.cloudfront.net/" target="_blank" rel="noopener">Live Demo →</a>
+          </div>
+          <div class="proj-shots proj-hero">
+            <img src="assets/trailpack-landing.png" alt="TrailPack landing page hero — Pack smarter, forget nothing" loading="lazy">
+          </div>
+          <div class="proj-shots">
+            <img src="assets/trailpack-dashboard.png" alt="TrailPack dashboard with trip stats and trail search" loading="lazy">
+            <img src="assets/trailpack-gear.png" alt="AI-generated Smart Gear List with essential and recommended items" loading="lazy">
+            <img src="assets/trailpack-weather.png" alt="Trip detail with live weather hero card and packing checklist" loading="lazy">
+            <img src="assets/trailpack-admin.png" alt="Admin panel with user role and trip analytics charts" loading="lazy">
+          </div>
           <ul>
             <li>Architected a full-stack SaaS trip planner with JWT authentication and role-based access control, reducing unauthorized access incidents by 30%.</li>
             <li>Integrated Groq AI, OpenWeatherMap, and AWS SES APIs to power gear recommendations, weather planning, and email notifications, cutting manual trip planning time from ~1 hour to under 5 minutes.</li>
