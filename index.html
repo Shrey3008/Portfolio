@@ -199,19 +199,29 @@
   .tl-content li::before{ content:'▸'; position:absolute; left:0; color:var(--amber); }
 
   /* ---------- Projects ---------- */
-  .proj-grid{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-  @media (max-width:800px){ .proj-grid{ grid-template-columns:1fr; } }
+  .proj-grid{ display:flex; flex-direction:column; gap:28px; }
   .proj-card{
     background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
-    padding:28px; display:flex; flex-direction:column;
+    padding:32px;
+    display:grid; grid-template-columns:minmax(0,5fr) minmax(0,6fr); gap:40px; align-items:start;
     transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
   }
   .proj-card:hover{ border-color:var(--cyan); transform:translateY(-5px); box-shadow:0 18px 40px -22px rgba(94,234,212,0.45); }
+  .proj-info{ display:flex; flex-direction:column; min-width:0; }
+  .proj-media{ display:flex; flex-direction:column; gap:10px; min-width:0; }
+  /* alternate the media panel side for visual rhythm */
+  .proj-card:nth-child(even) .proj-info{ order:2; }
+  .proj-card:nth-child(even) .proj-media{ order:1; }
+  @media (max-width:860px){
+    .proj-card{ grid-template-columns:1fr; gap:22px; padding:24px; }
+    .proj-card:nth-child(even) .proj-info,
+    .proj-card:nth-child(even) .proj-media{ order:0; }
+  }
   .proj-top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
   .proj-card h3{ font-size:20px; }
   .proj-tag{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--amber); border:1px solid var(--amber-dim); background:var(--amber-dim); padding:3px 8px; border-radius:5px; white-space:nowrap; }
   .proj-date{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:14px; display:block; }
-  .proj-card ul{ list-style:none; display:flex; flex-direction:column; gap:9px; margin-bottom:18px; flex:1; }
+  .proj-card ul{ list-style:none; display:flex; flex-direction:column; gap:9px; margin-bottom:18px; }
   .proj-card li{ color:var(--muted); font-size:14px; padding-left:16px; position:relative; }
   .proj-card li::before{ content:'—'; position:absolute; left:0; color:var(--cyan); }
   .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
@@ -227,6 +237,9 @@
   .proj-shots img{ width:100%; height:auto; border-radius:8px; border:1px solid var(--line); display:block; cursor:zoom-in; transition:border-color .2s ease; }
   .proj-shots img:hover{ border-color:var(--cyan); }
   .proj-shots.proj-hero{ grid-template-columns:1fr; }
+  .proj-media .proj-shots{ margin-bottom:0; }
+  /* simple two-image cards: stack the pair to fill the media panel */
+  .proj-media .proj-shots:only-child{ grid-template-columns:1fr; }
   @media (max-width:480px){ .proj-shots{ grid-template-columns:1fr; } }
 
   /* ---------- Lightbox ---------- */
@@ -437,78 +450,90 @@
       <h2 class="section-title reveal">Things I've shipped end-to-end</h2>
       <div class="proj-grid">
         <div class="proj-card reveal">
-          <div class="proj-top">
-            <h3>HN Hiring Trends Dashboard</h3>
-            <span class="proj-tag">Data/LLM</span>
+          <div class="proj-info">
+            <div class="proj-top">
+              <h3>HN Hiring Trends Dashboard</h3>
+              <span class="proj-tag">Data/LLM</span>
+            </div>
+            <span class="proj-date">Jul 2026 · LLM-Powered Data Pipeline &amp; Analytics</span>
+            <div class="proj-links">
+              <a href="https://github.com/Shrey3008/hn-hiring-dashboard" target="_blank" rel="noopener">GitHub →</a>
+              <a href="https://hn-hiring-dashboard-t65sz95fbuk5vjwzcatmtz.streamlit.app/" target="_blank" rel="noopener">Live Demo →</a>
+            </div>
+            <ul>
+              <li>Engineered an end-to-end ETL pipeline ingesting ~12,000 unstructured job posts via the Algolia HN API, parsed into a structured schema with 90%+ field extraction coverage on company and work-mode classification.</li>
+              <li>Built an interactive Streamlit dashboard visualizing hiring trends across 124 technologies, revealing an 11-point shift from remote to onsite roles over three years.</li>
+              <li>Integrated a Groq-powered natural language query feature with layered SQL guardrails, then caught and fixed a 3x data accuracy bug in LLM-generated SQL caused by join fan-out.</li>
+            </ul>
+            <div class="chip-row">
+              <span class="chip">Python</span><span class="chip">SQLAlchemy</span><span class="chip">SQLite</span><span class="chip">Streamlit</span><span class="chip">Groq API</span><span class="chip">Pandas</span><span class="chip">Altair</span>
+            </div>
           </div>
-          <span class="proj-date">Jul 2026 · LLM-Powered Data Pipeline &amp; Analytics</span>
-          <div class="proj-links">
-            <a href="https://github.com/Shrey3008/hn-hiring-dashboard" target="_blank" rel="noopener">GitHub →</a>
-            <a href="https://hn-hiring-dashboard-t65sz95fbuk5vjwzcatmtz.streamlit.app/" target="_blank" rel="noopener">Live Demo →</a>
-          </div>
-          <div class="proj-shots">
-            <img src="assets/hn-overview.png" alt="Dashboard KPI row and natural language query box" loading="lazy">
-            <img src="assets/hn-tech-trend.png" alt="Technology trend chart comparing share of job posts over time" loading="lazy">
-          </div>
-          <ul>
-            <li>Engineered an end-to-end ETL pipeline ingesting ~12,000 unstructured job posts via the Algolia HN API, parsed into a structured schema with 90%+ field extraction coverage on company and work-mode classification.</li>
-            <li>Built an interactive Streamlit dashboard visualizing hiring trends across 124 technologies, revealing an 11-point shift from remote to onsite roles over three years.</li>
-            <li>Integrated a Groq-powered natural language query feature with layered SQL guardrails, then caught and fixed a 3x data accuracy bug in LLM-generated SQL caused by join fan-out.</li>
-          </ul>
-          <div class="chip-row">
-            <span class="chip">Python</span><span class="chip">SQLAlchemy</span><span class="chip">SQLite</span><span class="chip">Streamlit</span><span class="chip">Groq API</span><span class="chip">Pandas</span><span class="chip">Altair</span>
-          </div>
-        </div>
-        <div class="proj-card reveal">
-          <div class="proj-top">
-            <h3>TrailPack</h3>
-            <span class="proj-tag">SaaS</span>
-          </div>
-          <span class="proj-date">Mar 2026 – May 2026 · AI-Powered Camping Trip Planner</span>
-          <div class="proj-links">
-            <a href="https://d1lo74lzwr0k57.cloudfront.net/" target="_blank" rel="noopener">Live Demo →</a>
-          </div>
-          <div class="proj-shots proj-hero">
-            <img src="assets/trailpack-landing.png" alt="TrailPack landing page hero — Pack smarter, forget nothing" loading="lazy">
-          </div>
-          <div class="proj-shots">
-            <img src="assets/trailpack-dashboard.png" alt="TrailPack dashboard with trip stats and trail search" loading="lazy">
-            <img src="assets/trailpack-gear.png" alt="AI-generated Smart Gear List with essential and recommended items" loading="lazy">
-            <img src="assets/trailpack-weather.png" alt="Trip detail with live weather hero card and packing checklist" loading="lazy">
-            <img src="assets/trailpack-admin.png" alt="Admin panel with user role and trip analytics charts" loading="lazy">
-          </div>
-          <ul>
-            <li>Architected a full-stack SaaS trip planner with JWT authentication and role-based access control, reducing unauthorized access incidents by 30%.</li>
-            <li>Integrated Groq AI, OpenWeatherMap, and AWS SES APIs to power gear recommendations, weather planning, and email notifications, cutting manual trip planning time from ~1 hour to under 5 minutes.</li>
-            <li>Containerized and deployed the application using Docker and AWS (Elastic Beanstalk, CloudFront, S3, IAM) with HTTPS and one-command redeploy scripts, reducing manual setup by 80%.</li>
-            <li>Implemented saved-trip management, checklist tracking, and a responsive mobile UI using JavaScript and CSS.</li>
-          </ul>
-          <div class="chip-row">
-            <span class="chip">JWT</span><span class="chip">Groq AI</span><span class="chip">OpenWeatherMap</span><span class="chip">AWS SES</span><span class="chip">Docker</span><span class="chip">AWS</span><span class="chip">JavaScript</span><span class="chip">CSS</span>
+          <div class="proj-media">
+            <div class="proj-shots">
+              <img src="assets/hn-overview.png" alt="Dashboard KPI row and natural language query box" loading="lazy">
+              <img src="assets/hn-tech-trend.png" alt="Technology trend chart comparing share of job posts over time" loading="lazy">
+            </div>
           </div>
         </div>
         <div class="proj-card reveal">
-          <div class="proj-top">
-            <h3>TalkData</h3>
-            <span class="proj-tag">AI/SQL</span>
+          <div class="proj-info">
+            <div class="proj-top">
+              <h3>TrailPack</h3>
+              <span class="proj-tag">SaaS</span>
+            </div>
+            <span class="proj-date">Mar 2026 – May 2026 · AI-Powered Camping Trip Planner</span>
+            <div class="proj-links">
+              <a href="https://d1lo74lzwr0k57.cloudfront.net/" target="_blank" rel="noopener">Live Demo →</a>
+            </div>
+            <ul>
+              <li>Architected a full-stack SaaS trip planner with JWT authentication and role-based access control, reducing unauthorized access incidents by 30%.</li>
+              <li>Integrated Groq AI, OpenWeatherMap, and AWS SES APIs to power gear recommendations, weather planning, and email notifications, cutting manual trip planning time from ~1 hour to under 5 minutes.</li>
+              <li>Containerized and deployed the application using Docker and AWS (Elastic Beanstalk, CloudFront, S3, IAM) with HTTPS and one-command redeploy scripts, reducing manual setup by 80%.</li>
+              <li>Implemented saved-trip management, checklist tracking, and a responsive mobile UI using JavaScript and CSS.</li>
+            </ul>
+            <div class="chip-row">
+              <span class="chip">JWT</span><span class="chip">Groq AI</span><span class="chip">OpenWeatherMap</span><span class="chip">AWS SES</span><span class="chip">Docker</span><span class="chip">AWS</span><span class="chip">JavaScript</span><span class="chip">CSS</span>
+            </div>
           </div>
-          <span class="proj-date">AI SQL Analytics Tool</span>
-          <div class="proj-links">
-            <a href="https://github.com/Shrey3008/Talkdata" target="_blank" rel="noopener">GitHub →</a>
-            <a href="https://talkdata-sigma.vercel.app" target="_blank" rel="noopener">Live Demo →</a>
+          <div class="proj-media">
+            <div class="proj-shots proj-hero">
+              <img src="assets/trailpack-landing.png" alt="TrailPack landing page hero — Pack smarter, forget nothing" loading="lazy">
+            </div>
+            <div class="proj-shots">
+              <img src="assets/trailpack-dashboard.png" alt="TrailPack dashboard with trip stats and trail search" loading="lazy">
+              <img src="assets/trailpack-gear.png" alt="AI-generated Smart Gear List with essential and recommended items" loading="lazy">
+              <img src="assets/trailpack-weather.png" alt="Trip detail with live weather hero card and packing checklist" loading="lazy">
+              <img src="assets/trailpack-admin.png" alt="Admin panel with user role and trip analytics charts" loading="lazy">
+            </div>
           </div>
-          <div class="proj-shots">
-            <img src="assets/talkdata-workspace.png" alt="TalkData workspace view" loading="lazy">
-            <img src="assets/talkdata-dashboard.png" alt="TalkData pinned dashboard view" loading="lazy">
+        </div>
+        <div class="proj-card reveal">
+          <div class="proj-info">
+            <div class="proj-top">
+              <h3>TalkData</h3>
+              <span class="proj-tag">AI/SQL</span>
+            </div>
+            <span class="proj-date">AI SQL Analytics Tool</span>
+            <div class="proj-links">
+              <a href="https://github.com/Shrey3008/Talkdata" target="_blank" rel="noopener">GitHub →</a>
+              <a href="https://talkdata-sigma.vercel.app" target="_blank" rel="noopener">Live Demo →</a>
+            </div>
+            <ul>
+              <li>Built a full-stack natural language-to-SQL analytics platform that converts plain-English questions into SQL queries, auto-generates charts, and supports pinned dashboards for saved insights.</li>
+              <li>Designed a RAG-based schema retrieval pipeline enabling accurate SQL generation grounded in the actual database structure, reducing hallucinated queries.</li>
+              <li>Implemented a 3-layer security architecture to prevent SQL injection and unauthorized query execution, validated by a 55-test suite that specifically caught a CTE-shadowing bypass vulnerability.</li>
+              <li>Automated data pipeline orchestration using Apache Airflow and deployed a production-ready app with live frontend/backend hosting on Vercel.</li>
+            </ul>
+            <div class="chip-row">
+              <span class="chip">RAG</span><span class="chip">SQL</span><span class="chip">Apache Airflow</span><span class="chip">Vercel</span><span class="chip">Security</span>
+            </div>
           </div>
-          <ul>
-            <li>Built a full-stack natural language-to-SQL analytics platform that converts plain-English questions into SQL queries, auto-generates charts, and supports pinned dashboards for saved insights.</li>
-            <li>Designed a RAG-based schema retrieval pipeline enabling accurate SQL generation grounded in the actual database structure, reducing hallucinated queries.</li>
-            <li>Implemented a 3-layer security architecture to prevent SQL injection and unauthorized query execution, validated by a 55-test suite that specifically caught a CTE-shadowing bypass vulnerability.</li>
-            <li>Automated data pipeline orchestration using Apache Airflow and deployed a production-ready app with live frontend/backend hosting on Vercel.</li>
-          </ul>
-          <div class="chip-row">
-            <span class="chip">RAG</span><span class="chip">SQL</span><span class="chip">Apache Airflow</span><span class="chip">Vercel</span><span class="chip">Security</span>
+          <div class="proj-media">
+            <div class="proj-shots">
+              <img src="assets/talkdata-workspace.png" alt="TalkData workspace view" loading="lazy">
+              <img src="assets/talkdata-dashboard.png" alt="TalkData pinned dashboard view" loading="lazy">
+            </div>
           </div>
         </div>
       </div>
