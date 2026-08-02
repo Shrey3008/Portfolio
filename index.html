@@ -77,7 +77,19 @@
   }
   .nav-links a:hover{ color:var(--text); }
   .nav-links a:hover::after{ width:100%; }
-  .nav-toggle{ display:none; background:none; border:none; color:var(--text); font-size:22px; cursor:pointer; }
+  .nav-toggle{ display:none; background:none; border:none; color:var(--text); font-size:22px; cursor:pointer; line-height:1; width:28px; }
+  /* Backdrop behind the open mobile menu. Hidden (and non-interactive) on
+     desktop, where .nav-toggle itself is display:none. */
+  .nav-scrim{
+    position:fixed; inset:0; z-index:98;
+    background:rgba(10,13,18,0.6);
+    opacity:0; pointer-events:none;
+    transition:opacity .3s ease;
+  }
+  .nav-scrim.show{ opacity:1; pointer-events:auto; }
+  /* Safety net: if the menu is open and the viewport widens past the mobile
+     breakpoint, the toggle disappears — don't strand a scrim over the page. */
+  @media (min-width:701px){ .nav-scrim{ display:none; } }
 
   /* ---------- Pipeline spine ---------- */
   .spine{
@@ -170,6 +182,10 @@
 
   /* ---------- About ---------- */
   .about-grid{ display:grid; grid-template-columns:1.3fr 1fr; gap:56px; align-items:start; }
+  /* The fact card is much shorter than the three paragraphs beside it, so
+     align-items:start left ~166px of dead space under it. Centre just the card
+     so the gap is shared above and below rather than pooling at the bottom. */
+  #about .about-grid > .card{ align-self:center; }
   .about-text p{ color:var(--muted); margin-bottom:16px; font-size:15.5px; }
   .about-text strong{ color:var(--text); font-weight:600; }
   .card{
@@ -185,7 +201,8 @@
 
   /* ---------- Experience timeline ---------- */
   .timeline{ display:flex; flex-direction:column; gap:0; }
-  .tl-item{ display:grid; grid-template-columns:140px 28px 1fr; gap:0; }
+  /* 140px forced every date range ("Apr 2023 – Jul 2023") onto two lines. */
+  .tl-item{ display:grid; grid-template-columns:170px 28px 1fr; gap:0; }
   .tl-date{ font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--amber); padding-top:4px; }
   .tl-rail{ display:flex; flex-direction:column; align-items:center; }
   .tl-node{ width:12px; height:12px; border-radius:50%; background:var(--bg); border:2px solid var(--cyan); margin-top:6px; flex-shrink:0; }
@@ -213,20 +230,47 @@
   /* alternate the media panel side for visual rhythm */
   .proj-card:nth-child(even) .proj-info{ order:2; }
   .proj-card:nth-child(even) .proj-media{ order:1; }
-  @media (max-width:860px){
+  /* Was 860px, which left a squeeze zone at roughly 860–1000px: the two-column
+     card was still active but the info column had collapsed to ~332px, wrapping
+     titles and bullets every few words. Stack a bit earlier instead. */
+  @media (max-width:1000px){
     .proj-card{ grid-template-columns:1fr; gap:22px; padding:24px; }
     .proj-card:nth-child(even) .proj-info,
     .proj-card:nth-child(even) .proj-media{ order:0; }
   }
   .proj-top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
   .proj-card h3{ font-size:20px; }
+  /* Deliberately NOT the same as .chip. This is a singular classifying badge
+     ("SaaS", "Data/LLM") sitting opposite the project title — it answers "what
+     kind of project is this?", not "what's in it?". Styling it like the tech
+     chips would put two identical-looking elements meaning different things in
+     the same card, and lose the at-a-glance scan of project type. */
   .proj-tag{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--amber); border:1px solid var(--amber-dim); background:var(--amber-dim); padding:3px 8px; border-radius:5px; white-space:nowrap; }
   .proj-date{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:14px; display:block; }
   .proj-card ul{ list-style:none; display:flex; flex-direction:column; gap:9px; margin-bottom:18px; }
   .proj-card li{ color:var(--muted); font-size:14px; padding-left:16px; position:relative; }
   .proj-card li::before{ content:'—'; position:absolute; left:0; color:var(--cyan); }
   .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
-  .chip{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--cyan); background:var(--cyan-dim); border:1px solid rgba(94,234,212,0.25); padding:4px 9px; border-radius:5px; }
+  /* One treatment for a technology token, wherever it appears. Project tech
+     chips and the skills grid meant the same thing — "a technology" — but were
+     styled differently (mono/cyan vs sans/neutral), so "Python" looked like two
+     different kinds of object depending on which section you were in.
+     .proj-tag stays deliberately distinct; see the note above it. */
+  .chip,
+  .skill-tags span{
+    font-family:'JetBrains Mono',monospace; font-size:11.5px;
+    color:var(--cyan); background:var(--cyan-dim);
+    border:1px solid rgba(94,234,212,0.25);
+    padding:4px 9px; border-radius:5px;
+    max-width:100%; word-break:break-word;
+    transition:border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+  }
+  .chip:hover,
+  .skill-tags span:hover{
+    border-color:var(--cyan);
+    transform:translateY(-2px);
+    box-shadow:0 4px 14px -6px rgba(94,234,212,0.45);
+  }
   .proj-links{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
   .proj-links a{
     font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan);
@@ -269,15 +313,9 @@
   .skill-cat{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:20px; }
   .skill-cat h4{ font-size:13px; font-family:'JetBrains Mono',monospace; color:var(--amber); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:14px; }
   .skill-tags{ display:flex; flex-wrap:wrap; gap:7px; }
-  .skill-tags span{
-    font-size:12.5px; color:var(--text); background:var(--panel-hi); border:1px solid var(--line);
-    padding:5px 10px; border-radius:6px; max-width:100%; word-break:break-word;
-    transition:border-color .2s ease, color .2s ease, transform .2s ease, background .2s ease, box-shadow .2s ease;
-  }
-  .skill-tags span:hover{
-    border-color:var(--cyan); color:var(--cyan); background:var(--cyan-dim);
-    transform:translateY(-2px); box-shadow:0 4px 14px -6px rgba(94,234,212,0.45);
-  }
+  /* Appearance now comes from the shared .chip / .skill-tags span rule in the
+     Projects block — the separate neutral treatment that used to live here was
+     the inconsistency. */
 
   /* ---------- Contact ---------- */
   .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:48px; }
@@ -346,6 +384,8 @@
 <body>
 
 <div class="bg-grid"></div>
+<!-- Dims the page behind the open mobile menu and gives a click-away target. -->
+<div class="nav-scrim" id="navScrim" aria-hidden="true"></div>
 
 <header>
   <nav class="wrap">
@@ -357,7 +397,7 @@
       <li><a href="#skills">Skills</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">☰</button>
   </nav>
 </header>
 
@@ -678,8 +718,25 @@
   // Mobile nav toggle
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
-  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
-  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+  const navScrim = document.getElementById('navScrim');
+
+  // The toggle used to stay "☰" whether the menu was open or closed, with
+  // nothing behind the panel to click away on. Reflect the state in the glyph,
+  // in aria-expanded for screen readers, and dim the page behind it.
+  function setNav(open) {
+    navLinks.classList.toggle('open', open);
+    if (navScrim) navScrim.classList.toggle('show', open);
+    navToggle.textContent = open ? '✕' : '☰';
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+
+  navToggle.addEventListener('click', () => setNav(!navLinks.classList.contains('open')));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setNav(false)));
+  if (navScrim) navScrim.addEventListener('click', () => setNav(false));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navLinks.classList.contains('open')) setNav(false);
+  });
 
   // Scroll reveal
   const revealEls = document.querySelectorAll('.reveal');
