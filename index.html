@@ -278,6 +278,7 @@
     padding:5px 10px; border-radius:6px; transition:border-color .2s ease, transform .2s ease;
   }
   .proj-links a:hover{ border-color:var(--cyan); transform:translateY(-2px); }
+  .proj-note{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--muted); margin:-4px 0 14px; display:block; }
   .proj-shots{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
   .proj-shots img{ width:100%; height:auto; border-radius:8px; border:1px solid var(--line); display:block; cursor:zoom-in; transition:border-color .2s ease; }
   .proj-shots img:hover{ border-color:var(--cyan); }
@@ -562,6 +563,7 @@
               <a href="https://github.com/Shrey3008/Talkdata" target="_blank" rel="noopener">GitHub →</a>
               <a href="https://talkdata-sigma.vercel.app" target="_blank" rel="noopener">Live Demo →</a>
             </div>
+            <span class="proj-note">Free-tier backend — first load may take ~1 min to wake.</span>
             <ul>
               <li>Built a full-stack natural language-to-SQL analytics platform that converts plain-English questions into SQL queries, auto-generates charts, and supports pinned dashboards for saved insights.</li>
               <li>Designed a RAG-based schema retrieval pipeline enabling accurate SQL generation grounded in the actual database structure, reducing hallucinated queries.</li>
