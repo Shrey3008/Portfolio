@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrailPack — UX & Reliability Pass | Shrey Patel</title>
+<meta name="description" content="A frontend audit of TrailPack across twelve pages: eleven fixes shipped, one withdrawn after measurement, four left open. Accessibility, error handling, CDN failure isolation and SRI pinning.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#0a0d12; --panel:#11151d; --panel-hi:#161c26; --line:#232a37;
+    --text:#e7eaf0; --muted:#99a3b7;
+    --cyan:#5eead4; --amber:#f5a524;
+    --cyan-dim:rgba(94,234,212,0.12); --amber-dim:rgba(245,165,36,0.12);
+    --radius:10px;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{ background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; line-height:1.6; overflow-x:hidden; }
+  ::selection{ background:var(--cyan); color:#06110f; }
+  h1,h2,h3,h4{ font-family:'Space Grotesk',sans-serif; font-weight:600; letter-spacing:-0.01em; }
+  .mono{ font-family:'JetBrains Mono',monospace; }
+  a{ color:inherit; text-decoration:none; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 32px; }
+
+  /* back */
+  .backbar{ border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20;
+    background:rgba(10,13,18,.86); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); }
+  .backbar .wrap{ display:flex; align-items:center; gap:14px; padding-top:16px; padding-bottom:16px; }
+  .back{ font-size:.86rem; color:var(--muted); display:flex; align-items:center; gap:8px; }
+  .back:hover{ color:var(--cyan); }
+  .backbar .live{ margin-left:auto; font-size:.8rem; color:var(--muted); }
+  .backbar .live a{ color:var(--cyan); }
+
+  /* head */
+  header.head{ padding:72px 0 40px; border-bottom:1px solid var(--line); }
+  .eyebrow{ font-family:'JetBrains Mono',monospace; font-size:.74rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
+  h1{ font-size:clamp(2rem,5vw,3.1rem); line-height:1.08; margin-bottom:18px; }
+  .lede{ font-size:1.06rem; color:var(--muted); max-width:64ch; }
+
+  .tally{ display:flex; flex-wrap:wrap; gap:10px; margin-top:28px; list-style:none; }
+  .tally li{ display:flex; align-items:baseline; gap:8px; background:var(--panel);
+    border:1px solid var(--line); border-radius:999px; padding:7px 15px; font-size:.83rem; color:var(--muted); }
+  .tally b{ font-family:'JetBrains Mono',monospace; color:var(--text); font-weight:500; }
+  .dot{ width:7px; height:7px; border-radius:50%; align-self:center; }
+  .d-ship{ background:var(--cyan); } .d-open{ background:var(--amber); } .d-with{ background:var(--muted); }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--line); }
+  h2{ font-size:1.42rem; margin-bottom:8px; }
+  .sec-note{ color:var(--muted); font-size:.9rem; margin-bottom:26px; }
+  h3{ font-size:1.05rem; margin-bottom:8px; }
+  p{ color:var(--muted); margin-bottom:14px; max-width:70ch; }
+  p strong, li strong{ color:var(--text); font-weight:600; }
+  code{ font-family:'JetBrains Mono',monospace; font-size:.86em; background:var(--panel-hi);
+    border:1px solid var(--line); border-radius:5px; padding:1px 6px; color:var(--text); }
+
+  .item{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:24px; margin-bottom:16px; }
+  .item-top{ display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+  .num{ font-family:'JetBrains Mono',monospace; font-size:.8rem; color:var(--cyan);
+    background:var(--cyan-dim); border-radius:5px; padding:3px 8px; }
+  .sha{ font-family:'JetBrains Mono',monospace; font-size:.76rem; color:var(--muted);
+    border:1px solid var(--line); border-radius:5px; padding:3px 8px; margin-left:auto; }
+  .sha:hover{ color:var(--cyan); border-color:var(--cyan); }
+
+  pre{ font-family:'JetBrains Mono',monospace; font-size:.79rem; line-height:1.7; color:var(--muted);
+    background:var(--bg); border:1px solid var(--line); border-left:2px solid var(--cyan);
+    border-radius:0 6px 6px 0; padding:14px 16px; margin:14px 0; overflow-x:auto; }
+
+  .flag{ background:var(--amber-dim); border:1px solid rgba(245,165,36,.28); border-radius:8px;
+    padding:13px 16px; margin-top:14px; font-size:.88rem; color:var(--text); }
+  .flag b{ color:var(--amber); }
+
+  ul.plain{ list-style:none; }
+  ul.plain li{ color:var(--muted); margin-bottom:10px; padding-left:18px; position:relative; max-width:70ch; }
+  ul.plain li::before{ content:'▸'; position:absolute; left:0; color:var(--cyan); }
+
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .open-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px; }
+  .open-card h4{ font-size:.95rem; margin-bottom:6px; }
+  .open-card p{ font-size:.87rem; margin:0; }
+
+  table{ width:100%; border-collapse:collapse; font-size:.86rem; margin-top:8px; }
+  th,td{ text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); }
+  th{ color:var(--muted); font-weight:500; font-size:.78rem; text-transform:uppercase; letter-spacing:.07em; }
+  td.mono{ color:var(--muted); }
+  tbody tr:hover{ background:var(--panel); }
+
+  footer{ padding:44px 0 80px; }
+  footer p{ font-size:.87rem; }
+  .cta{ display:inline-flex; align-items:center; gap:9px; border:1px solid var(--cyan); color:var(--cyan);
+    border-radius:999px; padding:11px 22px; font-size:.88rem; font-weight:500; margin-top:8px; }
+  .cta:hover{ background:var(--cyan-dim); }
+
+  @media(max-width:760px){ .grid2{ grid-template-columns:1fr; } .wrap{ padding:0 20px; } }
+  @media(prefers-reduced-motion:reduce){ *{ transition:none!important; } }
+</style>
+</head>
+<body>
+
+<div class="backbar"><div class="wrap">
+  <a class="back" href="index.html#projects">← Back to projects</a>
+  <span class="live">TrailPack ·
+    <a href="https://trailpack-smart-camping.vercel.app" target="_blank" rel="noopener">live</a> ·
+    <a href="https://github.com/Shrey3008/TrailPack---Smart-Camping-Trip-Planner" target="_blank" rel="noopener">source</a>
+  </span>
+</div></div>
+
+<header class="head"><div class="wrap">
+  <p class="eyebrow">Case study · frontend audit</p>
+  <h1>Auditing a twelve-page frontend, and fixing what the audit found</h1>
+  <p class="lede">
+    A pass over every page of TrailPack against how comparable apps handle the same flows —
+    onboarding, checklist UX, empty and error states. Sixteen findings, ranked by impact against
+    effort before any code was written. Eleven shipped, one withdrawn once I measured it, four
+    left open with the reason recorded.
+  </p>
+  <ul class="tally">
+    <li><span class="dot d-ship"></span><b>11</b> shipped</li>
+    <li><span class="dot d-with"></span><b>1</b> withdrawn</li>
+    <li><span class="dot d-open"></span><b>4</b> open</li>
+    <li><b>12</b> commits</li>
+    <li><b>22</b> files</li>
+    <li><b>+623 / −1,151</b> lines</li>
+  </ul>
+</div></header>
+
+<section><div class="wrap">
+  <h2>How it was scoped</h2>
+  <p class="sec-note">Audit first, ranked proposal second, code third.</p>
+  <p>
+    The brief was to improve the UI rather than to fix a named bug, so the first output was not a
+    commit — it was a ranked list of sixteen findings grouped into quick wins, structural work and
+    polish, each with an effort estimate, agreed before implementation started. Every fix then
+    landed as its own reviewable commit with the reasoning in the message.
+  </p>
+  <p>
+    The net line count is the part I'd point at: <strong>623 added against 1,151 deleted</strong>.
+    Most of the value was in removing things that had drifted, not adding features.
+  </p>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Technical highlights</h2>
+  <p class="sec-note">Four pieces worth reading the diff for.</p>
+
+  <div class="item">
+    <div class="item-top"><span class="num">Item 08</span><h3>Marking the moment a checklist is finished</h3>
+      <a class="sha mono" href="https://github.com/Shrey3008/TrailPack---Smart-Camping-Trip-Planner/commit/d25e210" target="_blank" rel="noopener">d25e210</a></div>
+    <p>
+      <code>updateProgress()</code> already knew when a list was complete — it used the fact to enable
+      the Start Trip button, then discarded it. Checking off the last item, which is the point of the
+      entire page, produced no acknowledgement beyond a button quietly becoming clickable.
+    </p>
+    <p>
+      The interesting part is the state, not the animation. It fires on the <em>transition</em> into
+      complete, and the flag starts <code>null</code> rather than <code>false</code>, so the first
+      call after page load only records where things stand. Opening a checklist you finished
+      yesterday stays silent; finishing one while you're looking at it does not. Re-completing after
+      unchecking fires again, deliberately — it is the same moment, and swallowing it would read as a bug.
+    </p>
+    <p>
+      The toast carries the Start Trip action rather than only applauding, and only when that button
+      is genuinely enabled — so it can never present a dead control.
+    </p>
+  </div>
+
+  <div class="item">
+    <div class="item-top"><span class="num">Item 09</span><h3>Five loading states became one</h3>
+      <a class="sha mono" href="https://github.com/Shrey3008/TrailPack---Smart-Camping-Trip-Planner/commit/68830bf" target="_blank" rel="noopener">68830bf</a></div>
+    <p>
+      The app had five loading treatments: skeletons, centred grey “Loading…” text, button spinners,
+      a bespoke <code>discoverLoadingHTML()</code>, and — on two pages — nothing but a
+      <code>console.error</code>. The best of them was walled off: every <code>.tp-skel-*</code> rule
+      carried a <code>body.dash-light</code> prefix, so the only two pages that could show a skeleton
+      were the two that already did.
+    </p>
+    <p>
+      Moving them to the shared sheet unscoped was the fix, but two details mattered. The skeleton
+      referenced two tokens declared only in the dashboard's own <code>:root</code>, which would have
+      resolved to nothing elsewhere and produced a transparent, borderless card — both now carry
+      fallbacks. And the swap would have regressed accessibility: the grey text was what a screen
+      reader announced, while skeletons are <code>aria-hidden</code> shapes that announce nothing,
+      so a visually-hidden helper went in alongside.
+    </p>
+  </div>
+
+  <div class="item">
+    <div class="item-top"><span class="num">Item 07</span><h3>CDN failure isolation, then SRI pinning</h3>
+      <a class="sha mono" href="https://github.com/Shrey3008/TrailPack---Smart-Camping-Trip-Planner/commit/235f97e" target="_blank" rel="noopener">235f97e · cefe28e</a></div>
+    <p>
+      The audit item was “three third-party CDNs”, but the real finding was a failure mode.
+      <code>discover.js</code> called <code>L.map()</code> inside a load handler with no check that
+      Leaflet had arrived. When unpkg is blocked, the <code>ReferenceError</code> escaped the handler
+      and took the render function with it — so a failed map did not merely lose the map, it blanked
+      the entire Discover section below it. The map is optional; the content is not.
+    </p>
+    <p>
+      Leaflet already carried integrity hashes. html2pdf and Chart.js did not, so two unpinned
+      third-party scripts were executing with full page privileges. Hashes were computed from the
+      pinned versions, confirmed stable across two separate fetches, then loaded in a browser with
+      the attribute set to prove neither hash blocks the script.
+    </p>
+    <pre>html2pdf.bundle.min.js   884 KB   cdnjs      now pinned
+chart.umd.min.js         200 KB   jsDelivr   now pinned
+leaflet.js                        unpkg      already pinned</pre>
+  </div>
+
+  <div class="item">
+    <div class="item-top"><span class="num">Items 13 / 14</span><h3>Error states that name the cause</h3>
+      <a class="sha mono" href="https://github.com/Shrey3008/TrailPack---Smart-Camping-Trip-Planner/commit/adf2e1a" target="_blank" rel="noopener">adf2e1a · 564474f</a></div>
+    <p>
+      The largest element above the fold on the checklist page rendered its full layout with every
+      reading replaced by an em-dash — six dashes, a placeholder glyph and a five-day forecast strip
+      of nothing — whenever weather could not be resolved. One failure path served every cause, so it
+      could never say which had happened. A card that renders the shape of information it does not
+      have reads as broken rather than as empty.
+    </p>
+    <p>
+      The trigger in practice was a blocked geolocation permission, whose rejection fell through to a
+      generic <code>catch</code> that could not distinguish it from a network error. It is now caught
+      where it happens and <strong>split by error code, because only one of the three is
+      permanent</strong>:
+    </p>
+    <pre>1  PERMISSION_DENIED      permanent   → "Add a location"
+2  POSITION_UNAVAILABLE   retryable   → "Use my location"
+3  TIMEOUT                retryable   → "Use my location"
+   no destination on trip             → "Add a location"
+   lookup failed for a known place    → "Try again"</pre>
+    <p>
+      That distinction is the whole point. Once a browser has blocked a site after repeated
+      dismissals, calling <code>getCurrentPosition()</code> again does nothing — so offering a retry
+      button for code 1 would be a control that cannot work, which is the same class of problem as
+      the em-dash skeleton: UI that looks functional and isn't. Codes 2 and 3 are transient and get a
+      real retry; code 1 gets the action that works without location at all, and the browser-settings
+      route described in prose rather than dressed as a button.
+    </p>
+    <p>
+      Following that thread surfaced a second gap. The “Add a location” action had nowhere to go —
+      nothing in the frontend could set an existing trip's location, because the only location input
+      lived in the create-trip modal. The backend had accepted <code>location</code>, <code>lat</code>
+      and <code>lon</code> on its update route the entire time; only the UI never asked. The existing
+      editor grew the missing field rather than gaining a second one.
+    </p>
+    <div class="flag">
+      <b>Not yet verified end to end.</b> The save round-trip has never been run — whether the
+      request succeeds, whether the re-fired lookup then resolves, and whether the panel flips from
+      “Location blocked” to a live forecast. The modal renders and the script parses; that is what
+      has been checked, and it is recorded as an open flag in the commit message rather than left
+      implied.
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>The finding I withdrew</h2>
+  <p class="sec-note">Item 04 — measured, disproved, removed from the plan.</p>
+  <p>
+    I flagged the Sign In button on the login page as failing contrast: in a screenshot it rendered a
+    washed-out green that read as disabled rather than primary. It was in the ranked plan as a
+    fifteen-minute quick win.
+  </p>
+  <p>
+    Measured against the rendered page, it was the intended <code>#2d6a4f</code> at full opacity. The
+    screenshot compression was pale, not the CSS. <strong>No change was made</strong>, and the item is
+    recorded as withdrawn rather than quietly dropped — an audit that only ever confirms its own
+    findings isn't an audit.
+  </p>
+</div></section>
+
+<section><div class="wrap">
+  <h2>A debugging aside</h2>
+  <p class="sec-note">Diagnosing a network failure that wasn't one.</p>
+  <p>
+    Mid-session, <code>git push</code> began failing instantly — not timing out — against
+    <code>github.com</code>. My first two explanations were both wrong, and the way they were wrong
+    is the useful part.
+  </p>
+  <ul class="plain">
+    <li><strong>First theory: the hotspot's upstream had dropped.</strong> DNS resolved, Wi-Fi was up, a default route existed, but every host failed in ~3 ms. Wrong — I had sampled only failing hosts.</li>
+    <li><strong>Second theory: a local content filter or VPN blocklist.</strong> Because <code>cloudflare.com</code> answered in 0.16 s while GitHub and Vercel refused instantly, and GitHub and Vercel are exactly what this project deploys through — a suspicious pairing. Also wrong.</li>
+    <li><strong>Actual cause: IPv4 was dead; IPv6 was fine.</strong> The same host over both protocols settled it — <code>cloudflare.com</code> returned 301 over IPv6 and failed over IPv4. Cloudflare wasn't whitelisted, it simply publishes AAAA records. GitHub and Vercel publish none, so they were IPv4-only, and IPv4 was the broken path. A carrier hotspot on an IPv6-only network with NAT64 that had stopped synthesising addresses.</li>
+  </ul>
+  <p>
+    The lesson I'd keep: the deciding test was the one that held the host constant and varied the
+    protocol. Both wrong theories came from comparing different hosts and reading meaning into which
+    ones failed.
+  </p>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Still open</h2>
+  <p class="sec-note">Four items, all blocked on the same thing — an authenticated session on the deployed app.</p>
+  <div class="grid2">
+    <div class="open-card"><h4>10 · Hero/chip overlap at 800px</h4>
+      <p>The action cluster overlaps the metadata row at one viewport width. Confirmed present before this work started — pre-existing, not a regression.</p></div>
+    <div class="open-card"><h4>11 · Eight inline <code>:root</code> blocks</h4>
+      <p>The stylesheet half of the token consolidation is done. The inline half sits mostly on pages that need a session to render, so changing them blind would mean editing CSS nobody can look at.</p></div>
+    <div class="open-card"><h4>12 · Two pages with no loading state</h4>
+      <p>Not inconsistent styling — the absence of any. Both fetch then populate, with failures going only to <code>console.error</code>, so tables are indistinguishable from a genuinely empty result until data lands.</p></div>
+    <div class="open-card"><h4>15 · Destination stores no coordinates</h4>
+      <p>Item 14's field sets the location string but not lat/lon, so weather geocodes the text rather than using stored coordinates — accurate for real place names, useless for anything unmappable.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>The twelve commits</h2>
+  <p class="sec-note">All merged to <code>dev</code> and deployed. Four carry OPEN flags in their own messages for work that is live but not yet verified end to end.</p>
+  <table>
+    <thead><tr><th>SHA</th><th>What it did</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">564474f</td><td>Let the trip editor set a destination, not only dates</td></tr>
+      <tr><td class="mono">adf2e1a</td><td>Say why the forecast is missing instead of drawing it blank</td></tr>
+      <tr><td class="mono">68830bf</td><td>Let every page use the loading skeletons, not just the dashboard</td></tr>
+      <tr><td class="mono">d25e210</td><td>Mark the moment a checklist is finished</td></tr>
+      <tr><td class="mono">cefe28e</td><td>Pin the last two CDN scripts with SRI hashes</td></tr>
+      <tr><td class="mono">235f97e</td><td>Stop a blocked CDN from taking Discover down with it</td></tr>
+      <tr><td class="mono">453e6ae</td><td>Define the brand palette once, in the sheet every page loads</td></tr>
+      <tr><td class="mono">f3fb4c0</td><td>Keep the three keyframes worth keeping, delete animations.css</td></tr>
+      <tr><td class="mono">599ca34</td><td>Ignore the local preview server config</td></tr>
+      <tr><td class="mono">3be3eda</td><td>Send Discover's failures through the toast system</td></tr>
+      <tr><td class="mono">1ec4971</td><td>Give the signed-out pages a visible keyboard focus</td></tr>
+      <tr><td class="mono">e5daebc</td><td>Serve one font request, with the weights the CSS actually asks for</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:22px">
+    The largest single change was <code>f3fb4c0</code>: a 1,000-line stylesheet that
+    <strong>no page loaded</strong>, and which two test files wrongly asserted <em>was</em> loaded.
+    Of its 56 class selectors, 46 targeted classes appearing in no markup, and eight of its eleven
+    keyframes duplicated animations the codebase already implemented under better names — moving them
+    would have added a sixth copy of <code>spin</code>. Three had no equivalent and were kept; the
+    rest went.
+  </p>
+</div></section>
+
+<footer><div class="wrap">
+  <p>
+    Stack: plain HTML, CSS and JavaScript with no build step, deployed identically to Cloudflare
+    Workers, Vercel and Netlify. Node and Express on Render behind it, MongoDB Atlas for storage.
+  </p>
+  <a class="cta" href="index.html#projects">← Back to projects</a>
+</div></footer>
+
+</body>
+</html>
