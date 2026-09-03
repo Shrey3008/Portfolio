@@ -308,8 +308,19 @@
 
   /* ---------- Skills ---------- */
   .skills-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; align-items:start; }
-  @media (max-width:800px){ .skills-grid{ grid-template-columns:1fr 1fr; } }
-  @media (max-width:520px){ .skills-grid{ grid-template-columns:1fr; } }
+  /* Five cards in a three-column grid left the last row two-thirds full. The
+     final card takes the remaining span instead, which also suits it: it is
+     the longest list, so it benefits from the extra width. */
+  .skills-grid .skill-cat:last-child{ grid-column:span 2; }
+  @media (max-width:800px){
+    .skills-grid{ grid-template-columns:1fr 1fr; }
+    /* Two columns puts the fifth card alone on row 3; spanning both fills it. */
+  }
+  @media (max-width:520px){
+    .skills-grid{ grid-template-columns:1fr; }
+    /* One column has nothing to span into — without this the card overflows. */
+    .skills-grid .skill-cat:last-child{ grid-column:auto; }
+  }
   .skill-cat{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:20px; }
   .skill-cat h4{ font-size:13px; font-family:'JetBrains Mono',monospace; color:var(--amber); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:14px; }
   .skill-tags{ display:flex; flex-wrap:wrap; gap:7px; }
