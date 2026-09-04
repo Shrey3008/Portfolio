@@ -307,7 +307,10 @@
   .lightbox-close:hover{ opacity:1; color:var(--cyan); }
 
   /* ---------- Skills ---------- */
-  .skills-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; align-items:start; }
+  /* stretch, not start: with start each card sized to its own content, so a
+     row's cards ended at different heights and the shorter ones left a ragged
+     bottom edge. Stretching makes every card in a row end on the same line. */
+  .skills-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; align-items:stretch; }
   /* Five cards in a three-column grid left the last row two-thirds full. The
      final card takes the remaining span instead, which also suits it: it is
      the longest list, so it benefits from the extra width. */
